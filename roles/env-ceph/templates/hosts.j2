@@ -1,0 +1,10 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% for node in ceph.mon %}
+{{ node.ip_man }} {{ node.hostname }}
+{% endfor %}
+
+{% for node in ceph.node %}
+{{ node.ip_man }} {{ node.hostname }}
+{% endfor %}

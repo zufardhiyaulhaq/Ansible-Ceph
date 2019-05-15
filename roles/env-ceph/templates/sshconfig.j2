@@ -1,0 +1,14 @@
+
+{% for node in ceph.mon %}
+Host {{ node.hostname }}  
+  Hostname {{ node.hostname }}
+  User stack
+  StrictHostKeyChecking no
+{% endfor %}
+
+{% for node in ceph.node %}
+Host {{ node.hostname }}  
+  Hostname {{ node.hostname }}
+  User stack
+  StrictHostKeyChecking no
+{% endfor %}

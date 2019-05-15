@@ -1,0 +1,9 @@
+---
+# tasks file for env-ceph
+- import_tasks: network.yml
+- import_tasks: firewall.yml
+- import_tasks: resolver.yml
+- import_tasks: packages.yml
+- import_tasks: ntp.yml
+- import_tasks: user.yml
+- import_tasks: ssh.yml

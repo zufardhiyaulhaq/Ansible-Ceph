@@ -1,0 +1,26 @@
+- name: Fetch authorized key user stack
+  become: yes
+  become_user: stack
+  fetch:
+    src: /home/stack/.ssh/id_rsa.pub
+    dest: /tmp/fetched
+    flat: yes
+  when: inventory_hostname == '{{ ceph.mon[0].hostname }}'
+
+- name: Ensure the fetched key is set for stack
+  become: yes
+  become_user: stack
+  copy:
+    src: /tmp/fetched
+    dest: /home/stack/.ssh/authorized_keys
+    mode: u=rw,g=r,o=r
+
+- name: copy certificate file
+  become: yes
+  become_user: stack
+  template:
+    src: sshconfig.j2
+    dest: /home/stack/.ssh/config
+    mode: u=rw,g=r,o=r
+  when: inventory_hostname == '{{ ceph.mon[0].hostname }}'
+

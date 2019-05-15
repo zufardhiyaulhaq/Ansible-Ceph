@@ -1,0 +1,9 @@
+- name: apply ceph environment
+  hosts: all
+  roles:
+  - env-ceph
+
+- name: Bootstraping Ceph
+  hosts: ceph-mon
+  roles:
+  - ceph

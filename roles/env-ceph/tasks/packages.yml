@@ -1,0 +1,37 @@
+---
+
+- name: install required repos
+  yum: name="{{ packages }}" state=latest
+  vars:
+    packages:
+    - epel-release
+    - yum-plugin-priorities
+    - https://download.ceph.com/rpm-luminous/el7/noarch/ceph-release-1-1.el7.noarch.rpm
+
+- name: update all packages
+  yum: name=* state=latest
+
+- name: install required packages
+  yum: name="{{ packages }}" state=latest
+  vars:
+    packages:
+      - nano
+      - vim
+      - wget
+      - screen
+      - htop
+      - crudini
+      - rsync
+      - chrony
+      - python-rbd
+      - ceph-common
+
+- name: install required packages
+  yum: name="{{ packages }}" state=latest
+  vars:
+    packages:
+      - http://mirror.centos.org/centos/7/os/x86_64/Packages/python-setuptools-0.9.8-7.el7.noarch.rpm
+      - http://download.ceph.com/rpm-luminous/el7/noarch/ceph-deploy-1.5.39-0.noarch.rpm
+  when: inventory_hostname == '{{ ceph.mon[0].hostname }}'
+
+

@@ -1,0 +1,7 @@
+[storage-mon]
+ceph-mon
+
+[storage]
+ceph0
+ceph1
+ceph2

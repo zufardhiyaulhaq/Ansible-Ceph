@@ -1,0 +1,100 @@
+---
+- name: create ceph-deploy
+  become: yes
+  become_user: stack
+  file:
+    path: /home/stack/ceph-deploy
+    state: directory
+
+- name: create cluster
+  become: yes
+  become_user: stack
+  shell: ceph-deploy new {{ ceph.mon[0].hostname }}
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: set replica
+  become: yes
+  become_user: stack
+  shell: echo "osd pool default size = 2" >> ceph.conf
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: set replica
+  become: yes
+  become_user: stack
+  shell: echo "rbd default features = 1" >> ceph.conf
+  args:
+    chdir: /home/stack/ceph-deploy/
+  
+- name: install ceph
+  become: yes
+  become_user: stack
+  shell: ceph-deploy install {{ ceph.mon[0].hostname }}  --stable luminous
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: install ceph
+  become: yes
+  become_user: stack
+  shell: ceph-deploy install {% for node in ceph.node %}{{ node.hostname }} {% endfor %}  --stable luminous
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: Create initial monitor
+  become: yes
+  become_user: stack
+  shell: ceph-deploy mon create-initial
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: Add OSD
+  become: yes
+  become_user: stack
+  shell: ceph-deploy disk zap {% for volume in item.volume %}{{ item.hostname }}:{{ volume }} {% endfor %}
+  args:
+    chdir: /home/stack/ceph-deploy/
+  with_items: "{{ ceph.node }}"
+
+- name: Add OSD
+  become: yes
+  become_user: stack
+  shell: ceph-deploy osd create {% for node in ceph.node %}{% for volume in node.volume %}{{ node.hostname }}:{{ volume }} {% endfor %}{% endfor %}
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: Deploy manager daemon
+  become: yes
+  become_user: stack
+  shell: ceph-deploy mgr create {{ ceph.mon[0].hostname }}
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: Copy konfigurasi dan key admin ke semua node
+  become: yes
+  become_user: stack
+  shell: ceph-deploy admin {{ ceph.mon[0].hostname }} {% for node in ceph.node %}{{ node.hostname }} {% endfor %}
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: Set Permission
+  become: yes
+  become_user: stack
+  shell: sudo chmod +r /etc/ceph/ceph.client.admin.keyring
+  args:
+    chdir: /home/stack/ceph-deploy/
+
+- name: Set Permission
+  become: yes
+  become_user: stack
+  shell: ssh {{ item.hostname }} "sudo chmod +r /etc/ceph/ceph.client.admin.keyring"
+  args:
+    chdir: /home/stack/ceph-deploy/
+  with_items: "{{ ceph.node }}"
+
+- name: Enable Dashboard
+  become: yes
+  become_user: stack
+  shell: ceph mgr module enable dashboard
+  args:
+    chdir: /home/stack/ceph-deploy/
