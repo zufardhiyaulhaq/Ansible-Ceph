@@ -1,14 +1,14 @@
 ceph:
   mon:
-    - hostname: ceph-mon
-      ip_man: 10.100.100.22
+    - hostname: zu-ceph-mon
+      ip_man: 10.200.200.10
   node:
-    - hostname: ceph0
-      ip_man: 10.100.100.23
+    - hostname: zu-ceph0
+      ip_man: 10.200.200.11
       volume: ['vdb','vdc']
-    - hostname: ceph1
-      ip_man: 10.100.100.24
+    - hostname: zu-ceph1
+      ip_man: 10.200.200.12
       volume: ['vdb','vdc']
-    - hostname: ceph2
-      ip_man: 10.100.100.25
+    - hostname: zu-ceph2
+      ip_man: 10.200.200.13
       volume: ['vdb','vdc']

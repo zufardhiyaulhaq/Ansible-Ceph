@@ -1,7 +1,7 @@
 [storage-mon]
-ceph-mon
+zu-ceph-mon
 
 [storage]
-ceph0
-ceph1
-ceph2
+zu-ceph0
+zu-ceph1
+zu-ceph2
